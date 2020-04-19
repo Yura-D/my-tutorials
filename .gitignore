@@ -88,6 +88,7 @@ target/
 __pycache__/
 local_settings.py
 
+conf.yaml
 .env
 .venv
 venv
