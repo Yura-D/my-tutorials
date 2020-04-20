@@ -89,6 +89,7 @@ __pycache__/
 local_settings.py
 
 note.txt
+ENV
 conf.yaml
 .env
 .venv

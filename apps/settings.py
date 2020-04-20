@@ -1,9 +1,4 @@
 import os
-import yaml
-
-
-with open('conf.yaml', 'r') as yamlfile:
-    config = yaml.load(yamlfile)
 
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
@@ -17,9 +12,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '!r)_^6m+dj+*yx5x236r1a35*wf#jw9hwi+g&f7fu^vl7k0s5m'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = config['debug_mode']
+DEBUG = os.environ.get('DEBUG_MODE', None)
 
-ALLOWED_HOSTS = [config['allowed_host']]
+ALLOWED_HOSTS = [os.environ.get('ALLOWED_HOSTS', None)]
 
 
 # Application definition
@@ -71,10 +66,10 @@ WSGI_APPLICATION = 'apps.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'djongo',
-        'NAME': config['database']['name'],
-        'HOST': config['database']['host'],
-        'USER': config['database']['user'],
-        'PASSWORD': config['database']['password']
+        'NAME': os.environ.get('DB_NAME', None),
+        'HOST': os.environ.get('DB_HOST', None),
+        'USER': os.environ.get('DB_USER', None),
+        'PASSWORD': os.environ.get('DB_PASSWORD', None)
     }
 }
 

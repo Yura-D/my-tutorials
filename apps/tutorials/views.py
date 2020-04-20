@@ -1,7 +1,6 @@
-
+import os
 import json
 import requests
-import yaml
 
 from django.shortcuts import render
 from django.http import JsonResponse
@@ -10,12 +9,8 @@ from django.views import View
 from .models import Tutorial, Category
 
 
-with open('conf.yaml', 'r') as yamlfile:
-    config = yaml.load(yamlfile)
-
-
 TELEGRAM_URL = "https://api.telegram.org/bot"
-TUTORIAL_BOT_TOKEN = config['telegram_bot_token']
+TUTORIAL_BOT_TOKEN = os.environ.get('TELEGRAM_TOKE', None)
 
 
 # https://api.telegram.org/bot<token>/setWebhook?url=<url>/webhooks/tutorial/
