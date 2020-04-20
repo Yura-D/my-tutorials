@@ -15,7 +15,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.views.decorators.csrf import csrf_exempt
+from apps.tutorials.views import TutorialBotView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('webhooks/tutorial/', csrf_exempt(TutorialBotView.as_view())),
 ]
