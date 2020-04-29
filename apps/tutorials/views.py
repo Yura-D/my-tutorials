@@ -17,9 +17,12 @@ TUTORIAL_BOT_TOKEN = os.environ.get('TELEGRAM_TOKE', None)
 # https://api.telegram.org/bot<token>/setWebhook?url=<url>/webhooks/tutorial/
 class TutorialBotView(View):
     def parsing_to_msg(self, data_list):
-        parsed_item = ['\n'.join(t) for t in data_list if t]
-        parsed_obj = '\n\n'.join(parsed_item)
-        return parsed_obj
+        if data_list:
+            parsed_item = ['\n'.join(t) for t in data_list if t]
+            parsed_obj = '\n\n'.join(parsed_item)
+            return parsed_obj
+        else:
+            return ''
 
     def post(self, request, *args, **kwargs):
         t_data = json.loads(request.body)
@@ -35,7 +38,6 @@ class TutorialBotView(View):
         if text == 'get_all':
             tutorial_list = get_all()
             msg = self.parsing_to_msg(tutorial_list)
-            self.send_message(msg, t_chat["id"])
         elif text.startswith('get_by_category'):
             category = text.split('get_by_category ')[1]
             tutorial_list = get_by_category(category)
@@ -45,7 +47,7 @@ class TutorialBotView(View):
             msg = '\n'.join(category_list)
         else:
             msg = "Unknown command"
-            self.send_message(msg, t_chat["id"])
+        self.send_message(msg, t_chat["id"])
 
         return JsonResponse({"ok": "POST request processed"})
 
