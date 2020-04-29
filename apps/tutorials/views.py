@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.views import View
 
 from .models import Tutorial, Category
+from .services import get_all, get_by_category, get_all_categories
 
 
 TELEGRAM_URL = "https://api.telegram.org/bot"
@@ -15,6 +16,11 @@ TUTORIAL_BOT_TOKEN = os.environ.get('TELEGRAM_TOKE', None)
 
 # https://api.telegram.org/bot<token>/setWebhook?url=<url>/webhooks/tutorial/
 class TutorialBotView(View):
+    def parsing_to_msg(self, data_list):
+        parsed_item = ['\n'.join(t) for t in data_list if t]
+        parsed_obj = '\n\n'.join(parsed_item)
+        return parsed_obj
+
     def post(self, request, *args, **kwargs):
         t_data = json.loads(request.body)
         t_message = t_data["message"]
@@ -27,17 +33,16 @@ class TutorialBotView(View):
 
         text = text.lstrip("/")
         if text == 'get_all':
-            tutorial_list = Tutorial.objects.values_list(
-                'name',
-                'link',
-                'category__name',
-                'comment'
-            ).order_by('category')
-
-            tutorial_list = ['\n'.join(t) for t in tutorial_list if t]
-            msg = '\n\n'.join(tutorial_list)
-            
+            tutorial_list = get_all()
+            msg = self.parsing_to_msg(tutorial_list)
             self.send_message(msg, t_chat["id"])
+        elif text.startswith('get_by_category'):
+            category = text.split('get_by_category ')[1]
+            tutorial_list = get_by_category(category)
+            msg = self.parsing_to_msg(tutorial_list)
+        elif text == 'categories':
+            category_list = get_all_categories()
+            msg = '\n'.join(category_list)
         else:
             msg = "Unknown command"
             self.send_message(msg, t_chat["id"])

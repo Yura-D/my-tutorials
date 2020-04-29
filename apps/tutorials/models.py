@@ -10,6 +10,7 @@ class Category(models.Model):
 
 
 class Tutorial(models.Model):
+    created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=255)
     link = models.TextField()
     comment = models.TextField(null=True, blank=True)
