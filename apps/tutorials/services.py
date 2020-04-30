@@ -1,3 +1,5 @@
+from django.contrib.postgres.search import SearchVector
+
 from .models import Tutorial, Category
 
 
@@ -26,3 +28,9 @@ def get_by_category(category):
 def get_all_categories():
     return Category.objects.all().values_list(
         'name', flat=True).order_by('name')
+
+
+def search(text):
+    tutorial_list = Tutorial.objects.annotate(search=SearchVector(
+        'name', 'comment', 'category__name'),).filter(search=text)
+    return tutorial_list

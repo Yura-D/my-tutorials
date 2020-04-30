@@ -29,6 +29,7 @@ class TutorialAdmin(admin.ModelAdmin):
         'tutorial_link',
         'short_comment',
     )
+    list_filter = ('category', )
     
     search_fields = ('name', 'comment', )
 
