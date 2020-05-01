@@ -32,5 +32,6 @@ def get_all_categories():
 
 def search(text):
     tutorial_list = Tutorial.objects.annotate(search=SearchVector(
-        'name', 'comment', 'category__name'),).filter(search=text)
+        'name', 'comment', 'category__name'),).filter(
+            search=text).values_list(*TUTORIAL_TUPLE)
     return tutorial_list
